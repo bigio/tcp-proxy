@@ -96,11 +96,11 @@ sub add_to_ip($$)
 sub new_conn {
     my ($host, $port) = @_;
     $local_addr = $start_ip;
-    for ( my $i = 1; $i < $max_ip_number; $i++ ) {
+    for ( my $i = 1; $i <= $max_ip_number; $i++ ) {
 	if ( not defined $ip_map{$local_addr} ) {
 		$ip_map{$local_addr} = 0;
 	}
-	if ( $ip_map{$local_addr} < $max_conn ) {
+	while ( $ip_map{$local_addr} < $max_conn ) {
 		print "Connection from " . $local_addr . " nr: " . $ip_map{$local_addr} . "\n" if $verbose;
 		$ip_map{$local_addr}++;
     		return IO::Socket::INET->new(
@@ -108,7 +108,6 @@ sub new_conn {
 			PeerPort => $port,
 			LocalAddr => $local_addr
 		) || die "Unable to connect to $host:$port: $!";
-		
         }
 	$local_addr = add_to_ip($start_ip, $i);
     }
@@ -151,7 +150,9 @@ sub close_connection {
     delete $socket_map{$remote};
 
     $client->close;
-    $remote->close;
+    if ( ref($remote) && ( $remote->can("close") ) ) {
+	$remote->close;
+    }
 
     $ip_map{$client_ip}--;
     print "Connection from $client_ip closed.\n" if $verbose;
