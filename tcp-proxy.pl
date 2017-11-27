@@ -95,8 +95,8 @@ sub add_to_ip($$)
 
 sub new_conn {
     my ($host, $port) = @_;
+    $local_addr = $start_ip;
     for ( my $i = 1; $i < $max_ip_number; $i++ ) {
-	$local_addr = add_to_ip($start_ip, $i);
 	if ( not defined $ip_map{$local_addr} ) {
 		$ip_map{$local_addr} = 0;
 	}
@@ -110,6 +110,7 @@ sub new_conn {
 		) || die "Unable to connect to $host:$port: $!";
 		
         }
+	$local_addr = add_to_ip($start_ip, $i);
     }
 }
 
