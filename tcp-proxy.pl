@@ -46,12 +46,12 @@ my $start_ip;
 my $destination;
 my $local_addr;
 
-my $debug = 1;
+my $verbose = 1;
 
-getopts('b:c:d:hi:p:s:', \%opts);
+getopts('b:c:d:hi:p:s:v', \%opts);
 
 sub usage {
-	print "Usage $0 [-bcdhips]\n";
+	print "Usage $0 [-bcdhipsv]\n";
 	exit;
 }
 
@@ -81,6 +81,11 @@ if ( defined $opts{'p'} ) {
 if ( defined $opts{'s'} ) {
         $start_ip = $opts{'s'};
 }
+if ( defined $opts{'v'} ) {
+        $verbose = 1;
+} else {
+	$verbose = 0;
+}
 
 sub add_to_ip($$)
 {
@@ -96,7 +101,7 @@ sub new_conn {
 		$ip_map{$local_addr} = 0;
 	}
 	if ( $ip_map{$local_addr} < $max_conn ) {
-		print "Connection from " . $local_addr . " nr: " . $ip_map{$local_addr} . "\n" if $debug;
+		print "Connection from " . $local_addr . " nr: " . $ip_map{$local_addr} . "\n" if $verbose;
 		$ip_map{$local_addr}++;
     		return IO::Socket::INET->new(
 			PeerAddr => $host,
@@ -123,7 +128,7 @@ sub new_connection {
     my $client = $server->accept;
     my $client_ip = client_ip($client);
 
-    print "Connection from $client_ip accepted.\n" if $debug;
+    print "Connection from $client_ip accepted.\n" if $verbose;
 
     my $remote = new_conn($destination, $remote_port);
     $iosel->add($client);
@@ -148,7 +153,7 @@ sub close_connection {
     $remote->close;
 
     $ip_map{$client_ip}--;
-    print "Connection from $client_ip closed.\n" if $debug;
+    print "Connection from $client_ip closed.\n" if $verbose;
 }
 
 sub client_ip {
