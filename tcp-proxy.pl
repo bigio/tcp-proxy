@@ -106,7 +106,8 @@ sub new_conn {
     		return IO::Socket::INET->new(
 			PeerAddr => $host,
 			PeerPort => $port,
-			LocalAddr => $local_addr
+			LocalAddr => $local_addr,
+			KeepAlive => 1
 		) || die "Unable to connect to $host:$port: $!";
         }
 	$local_addr = add_to_ip($start_ip, $i);
@@ -119,7 +120,8 @@ sub new_server {
         LocalAddr => $host,
         LocalPort => $port,
         ReuseAddr => 1,
-        Listen    => 100
+        Listen    => 100,
+	KeepAlive => 1
     ) || die "Unable to listen on $host:$port: $!";
 }
 
@@ -178,11 +180,13 @@ while (1) {
             my $buffer;
             my $read = $socket->sysread($buffer, 4096);
             if ($read) {
+		unless ($iosel->can_write(10)) {
+			warn "Socket write timed out";
+		}
                 $remote->syswrite($buffer);
-            }
-            else {
-                close_connection($socket);
-            }
+            } else {
+		close_connection($socket);
+	    }
         }
     }
 }
