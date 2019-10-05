@@ -50,6 +50,54 @@ my $verbose = 1;
 
 getopts('b:c:d:hi:p:s:v', \%opts);
 
+=head1 NAME
+
+tcp-proxy - tcp/ip proxy to connect to a remote host using different ip addresses
+
+=head1 SYNOPSIS
+
+B<tcp-proxy> [-bcdhipsv]
+
+=head1 DESCRIPTION
+
+Tcp proxy to be able to connect to a remote host by using a pool of source ip addresses.
+
+=head1 OPTIONS
+
+=over 4
+
+=item -b
+
+Local port to bind for the listening connection (default port is 8080).
+
+=item -c
+
+Maximum number of connections handled (10 by default).
+
+=item -d
+
+Destination host to connect to.
+
+=item -i
+
+Maximum number of ip numbers used in the pool (default is 1).
+
+=item -p
+
+Remote tcp port to connect to (default port is 25).
+
+=item -s
+
+Source ip address to be used (first ip in the pool).
+
+=item -v
+
+Print verbose informations on C<STDOUT>.
+
+=back
+
+=cut
+
 sub usage {
 	print "Usage $0 [-bcdhipsv]\n";
 	exit;
@@ -71,6 +119,9 @@ if ( defined $opts{'c'} ) {
 }
 if ( defined $opts{'d'} ) {
         $destination = $opts{'d'};
+} else {
+	warn "Destination host is needed (-d option)";
+	exit 1;
 }
 if ( defined $opts{'i'} ) {
         $max_ip_number = $opts{'i'};

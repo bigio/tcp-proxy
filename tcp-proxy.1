@@ -1,0 +1,32 @@
+TCP-PROXY(1)                                      User Contributed Perl Documentation                                      TCP-PROXY(1)
+
+
+
+
+NNAAMMEE
+       tcp-proxy - tcp/ip proxy to connect to a remote host using different ip addresses
+
+SSYYNNOOPPSSIISS
+       ttccpp--pprrooxxyy [-bcdhipsv]
+
+DDEESSCCRRIIPPTTIIOONN
+       Tcp proxy to be able to connect to a remote host by using a pool of source ip addresses.
+
+OOPPTTIIOONNSS
+       -b  Local port to bind for the listening connection (default port is 8080).
+
+       -c  Maximum number of connections handled (10 by default).
+
+       -d  Destination host to connect to.
+
+       -i  Maximum number of ip numbers used in the pool (default is 1).
+
+       -p  Remote tcp port to connect to (default port is 25).
+
+       -s  Source ip address to be used (first ip in the pool).
+
+       -v  Print verbose informations on "STDOUT".
+
+
+
+perl v5.28.2                                                   2019-10-05                                                  TCP-PROXY(1)
