@@ -66,12 +66,16 @@ if ( defined $opts{'b'} ) {
 }
 if ( defined $opts{'c'} ) {
         $max_conn = $opts{'c'};
+} else {
+	$max_conn = 10;
 }
 if ( defined $opts{'d'} ) {
         $destination = $opts{'d'};
 }
 if ( defined $opts{'i'} ) {
         $max_ip_number = $opts{'i'};
+} else {
+	$max_ip_number = 1;
 }
 if ( defined $opts{'p'} ) {
         $remote_port = $opts{'p'};
@@ -80,6 +84,9 @@ if ( defined $opts{'p'} ) {
 }
 if ( defined $opts{'s'} ) {
         $start_ip = $opts{'s'};
+} else {
+	warn "Ip address to use for connecting to remote host is needed (-s option)";
+	exit 1;
 }
 if ( defined $opts{'v'} ) {
         $verbose = 1;
@@ -87,8 +94,7 @@ if ( defined $opts{'v'} ) {
 	$verbose = 0;
 }
 
-sub add_to_ip($$)
-{
+sub add_to_ip {
   my( $ip, $add ) = @_;
   inet_ntoa pack( 'N', unpack('N',inet_aton $ip) + $add )
 }
